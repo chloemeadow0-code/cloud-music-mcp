@@ -3,6 +3,7 @@
 import sys
 import argparse
 import asyncio
+import os
 
 from .main import mcp
 
@@ -22,8 +23,13 @@ def main():
 
     args = parser.parse_args()
 
-    # FastMCP 直接运行
-    mcp.run()
+    if args.transport == "sse":
+        host = os.getenv("HOST", "0.0.0.0")
+        port = int(os.getenv("PORT", "8080"))
+        print(f"Starting SSE server on {host}:{port}")
+        mcp.run(transport="sse", host=host, port=port)
+    else:
+        mcp.run()
 
 
 if __name__ == "__main__":
